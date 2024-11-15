@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: "configserver:"
+
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: auth-service
+#          uri: lb://auth-service
+#          predicates:
+#            - Path=/api/auth/** , /api/auth/v3/api-docs
+#
+#        - id: book-service
+#          uri: lb://book-service
+#          predicates:
+#            - Path=/api/book/** , /api/book/v3/api-docs
+#
+#        - id: library-service
+#          uri: lb://library-service
+#          predicates:
+#            - Path=/api/record/** , /api/record/v3/api-docs
+#
+#
+#springdoc:
+#  api-docs:
+#    enabled: true
+#  swagger-ui:
+#    enabled: true
+#    path: /swagger-ui.html
+#    config-url: /v3/api-docs/swagger-config
+#    urls:
+#      - url: /api/auth/v3/api-docs
+#        name: Auth Service
+#        display-name: Auth Service
+#      - url: /api/book/v3/api-docs
+#        name: Book Service
+#        display-name: Book Service
+#      - url: /api/record/v3/api-docs
+#        name: Library Service
+#        display-name: Library Service
