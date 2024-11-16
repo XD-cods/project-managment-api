@@ -1,4 +1,4 @@
-package com.vlad.projectservice.persistance.entity;
+package com.vlad.taskservice.persistance.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,4 +1,5 @@
-package com.vlad.projectservice.persistance.entity;
+package com.vlad.taskservice.persistance.entity;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,39 +9,44 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
-@Entity
-@Table(name = "user", schema = "public")
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class User {
+@AllArgsConstructor
+@Entity
+@Table(name = "task", schema = "public")
+public class Task {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "user_id")
+  @Column(nullable = false, updatable = false, unique = true)
   private Long id;
 
-  @NotEmpty
-  private String username;
+  private String title;
 
-  @Email
-  private String email;
-
-  @Builder.Default
-  private Role role = Role.USER;
+  private String description;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "project_id")
-  private Project team;
-}
+  @JoinColumn(name = "id")
+  private Project project;
 
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User assignee;
+
+  @Builder.Default
+  private TaskStatus projectStatus = TaskStatus.CREATED;
+
+  private LocalDateTime deadline;
+
+}
