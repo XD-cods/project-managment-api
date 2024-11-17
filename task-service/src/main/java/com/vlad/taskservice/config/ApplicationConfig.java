@@ -1,7 +1,5 @@
 package com.vlad.taskservice.config;
 
-import com.vlad.taskservice.persistance.entity.Task;
-import com.vlad.taskservice.web.request.TaskRequest;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +12,6 @@ public class ApplicationConfig {
   public ModelMapper modelMapper() {
     ModelMapper modelMapper = new ModelMapper();
 
-    // Устанавливаем условие, чтобы игнорировать null значения
     modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     return modelMapper;
   }
