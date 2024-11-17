@@ -1,4 +1,4 @@
-package com.vlad.taskservice.config;
+package com.vlad.userservice.config;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -12,6 +12,7 @@ public class ApplicationConfig {
   public ModelMapper modelMapper() {
     ModelMapper modelMapper = new ModelMapper();
 
+    // Устанавливаем условие, чтобы игнорировать null значения
     modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     return modelMapper;
   }

@@ -34,6 +34,7 @@
         <module>config-server</module>
         <module>project-service</module>
         <module>task-service</module>
+        <module>user-service</module>
         <module>api-gateway</module>
     </modules>
 
