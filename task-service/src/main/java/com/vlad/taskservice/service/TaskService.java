@@ -2,8 +2,12 @@ package com.vlad.taskservice.service;
 
 import com.vlad.taskservice.exception.ConflictException;
 import com.vlad.taskservice.exception.NotFoundException;
+import com.vlad.taskservice.persistance.entity.Project;
 import com.vlad.taskservice.persistance.entity.Task;
+import com.vlad.taskservice.persistance.entity.User;
 import com.vlad.taskservice.persistance.repository.TaskRepository;
+import com.vlad.taskservice.utility.feign.ProjectClient;
+import com.vlad.taskservice.utility.feign.UserClient;
 import com.vlad.taskservice.utility.mapper.TaskMapper;
 import com.vlad.taskservice.web.request.TaskRequest;
 import com.vlad.taskservice.web.response.TaskResponse;
@@ -17,6 +21,8 @@ import java.util.List;
 public class TaskService {
   private final TaskRepository taskRepository;
   private final TaskMapper taskMapper;
+  private final ProjectClient projectClient;
+  private final UserClient userClient;
 
   public static final String NOT_FOUND_MESSAGE = "Task not found by id: %d";
   public static final String CONFLICT_MESSAGE = "Task already exist by name: %s";
@@ -40,8 +46,11 @@ public class TaskService {
       throw new ConflictException(String.format(CONFLICT_MESSAGE, taskRequest.getTitle()));
     }
 
-    //TODO: Add project add and assignee logic
     Task newTask = taskMapper.mapTaskRequestToTask(taskRequest);
+
+    newTask.setAssignee(getUserById(taskRequest.getAssigneeId()));
+    newTask.setProject(getProjectById(taskRequest.getProjectId()));
+
     taskRepository.save(newTask);
     return taskMapper.mapTaskToTaskResponse(newTask);
   }
@@ -50,7 +59,9 @@ public class TaskService {
     Task existTask = taskRepository.findById(id)
             .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, id)));
 
-    //TODO: Add project add and assignee logic
+    existTask.setAssignee(getUserById(taskRequest.getAssigneeId()));
+    existTask.setProject(getProjectById(taskRequest.getProjectId()));
+
     taskMapper.updateTaskFromTaskRequest(existTask, taskRequest);
     taskRepository.save(existTask);
     return taskMapper.mapTaskToTaskResponse(existTask);
@@ -62,5 +73,13 @@ public class TaskService {
 
     taskRepository.deleteById(id);
     return true;
+  }
+
+  private User getUserById(Long id) {
+    return userClient.getUserById(id).getBody();
+  }
+
+  private Project getProjectById(Long id) {
+    return projectClient.getProjectById(id).getBody();
   }
 }

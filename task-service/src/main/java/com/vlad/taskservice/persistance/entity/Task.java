@@ -45,7 +45,7 @@ public class Task {
   private User assignee;
 
   @Builder.Default
-  private TaskStatus projectStatus = TaskStatus.CREATED;
+  private TaskStatus taskStatus = TaskStatus.CREATED;
 
   private LocalDateTime deadline;
 
