@@ -1,8 +1,5 @@
 package com.vlad.taskservice.exception;
 
-import com.vlad.projectservice.exception.BadRequestException;
-import com.vlad.projectservice.exception.ErrorResponse;
-import com.vlad.projectservice.exception.NotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
