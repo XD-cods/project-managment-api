@@ -40,6 +40,7 @@ public class ProjectService {
       throw new ConflictException(String.format(CONFLICT_MESSAGE, projectRequest.getName()));
     }
 
+    //TODO: Add team add and owner add logic
     Project newProject = projectMapper.mapProjectRequestToProject(projectRequest);
     projectRepository.save(newProject);
     return projectMapper.mapProjectToProjectResponse(newProject);
@@ -49,6 +50,7 @@ public class ProjectService {
     Project existProject = projectRepository.findById(id)
             .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, id)));
 
+    //TODO: Add team add and owner add logic
     projectMapper.updateProjectFromProjectRequest(existProject, projectRequest);
     projectRepository.save(existProject);
     return projectMapper.mapProjectToProjectResponse(existProject);

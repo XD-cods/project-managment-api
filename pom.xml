@@ -30,7 +30,11 @@
         <java.version>17</java.version>
     </properties>
     <modules>
-
+        <module>eureka-server</module>
+        <module>config-server</module>
+        <module>project-service</module>
+        <module>task-service</module>
+        <module>api-gateway</module>
     </modules>
 
     <build>

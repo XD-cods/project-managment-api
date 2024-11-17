@@ -3,6 +3,7 @@ package com.vlad.projectservice.service;
 import com.vlad.projectservice.exception.ConflictException;
 import com.vlad.projectservice.exception.NotFoundException;
 import com.vlad.projectservice.persistance.entity.Project;
+import com.vlad.projectservice.persistance.entity.User;
 import com.vlad.projectservice.persistance.repository.ProjectRepository;
 import com.vlad.projectservice.util.mapper.ProjectMapper;
 import com.vlad.projectservice.web.request.ProjectRequest;
@@ -67,7 +68,6 @@ class ProjectServiceTest {
     assertEquals(project.getId(), response.getId());
     assertEquals(project.getDescription(), response.getDescription());
     assertEquals(project.getName(), response.getName());
-    assertEquals(project.getOwnerId(), response.getOwnerId());
   }
 
   @Test
@@ -124,7 +124,7 @@ class ProjectServiceTest {
             .id(1L)
             .description("test")
             .name("test")
-            .ownerId(1L)
+            .owner(new User())
             .build();
   }
 

@@ -1,7 +1,7 @@
 package com.vlad.projectservice.web.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vlad.projectservice.persistance.entity.Status;
+import com.vlad.projectservice.persistance.entity.ProjectStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +27,6 @@ public class ProjectRequest {
   @JsonProperty("team_ids")
   private List<Long> teamIds;
 
-  private Status status;
+  private ProjectStatus projectStatus;
 
 }
