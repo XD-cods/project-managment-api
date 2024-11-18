@@ -32,7 +32,7 @@ public class Project {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(nullable = false, unique = true, updatable = false)
+  @Column(name = "project_id")
   private Long id;
 
   @NotEmpty

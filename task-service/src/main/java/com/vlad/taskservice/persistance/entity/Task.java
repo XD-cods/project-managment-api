@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 public class Task {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(nullable = false, updatable = false, unique = true)
+  @Column(name = "task_id")
   private Long id;
 
   private String title;
@@ -37,7 +37,7 @@ public class Task {
   private String description;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "id")
+  @JoinColumn(name = "project_id")
   private Project project;
 
   @OneToOne(fetch = FetchType.LAZY)
