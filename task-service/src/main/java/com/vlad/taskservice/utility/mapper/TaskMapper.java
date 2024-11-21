@@ -21,6 +21,17 @@ public class TaskMapper {
   }
 
   public void updateTaskFromTaskRequest(Task existTask, TaskRequest taskRequest) {
-    modelMapper.map(existTask, taskRequest);
+    if (taskRequest.getTaskStatus() != null) {
+      existTask.setTaskStatus(taskRequest.getTaskStatus());
+    }
+    if (taskRequest.getDeadline() != null) {
+      existTask.setDeadline(taskRequest.getDeadline());
+    }
+    if (taskRequest.getTitle() != null) {
+      existTask.setTitle(taskRequest.getTitle());
+    }
+    if (taskRequest.getDescription() != null) {
+      existTask.setDescription(taskRequest.getDescription());
+    }
   }
 }

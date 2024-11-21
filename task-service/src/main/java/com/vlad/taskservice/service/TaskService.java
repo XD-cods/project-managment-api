@@ -48,8 +48,12 @@ public class TaskService {
 
     Task newTask = taskMapper.mapTaskRequestToTask(taskRequest);
 
-    newTask.setAssignee(getUserById(taskRequest.getAssigneeId()));
-    newTask.setProject(getProjectById(taskRequest.getProjectId()));
+    if (taskRequest.getAssignee() != null) {
+      newTask.setAssignee(getUserById(taskRequest.getAssignee()));
+    }
+    if (taskRequest.getProject() != null) {
+      newTask.setProject(getProjectById(taskRequest.getProject()));
+    }
 
     taskRepository.save(newTask);
     return taskMapper.mapTaskToTaskResponse(newTask);
@@ -59,8 +63,12 @@ public class TaskService {
     Task existTask = taskRepository.findById(id)
             .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, id)));
 
-    existTask.setAssignee(getUserById(taskRequest.getAssigneeId()));
-    existTask.setProject(getProjectById(taskRequest.getProjectId()));
+    if (taskRequest.getAssignee() != null) {
+      existTask.setAssignee(getUserById(taskRequest.getAssignee()));
+    }
+    if (taskRequest.getProject() != null) {
+      existTask.setProject(getProjectById(taskRequest.getProject()));
+    }
 
     taskMapper.updateTaskFromTaskRequest(existTask, taskRequest);
     taskRepository.save(existTask);

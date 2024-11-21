@@ -3,8 +3,10 @@ package com.vlad.projectservice.service;
 import com.vlad.projectservice.exception.ConflictException;
 import com.vlad.projectservice.exception.NotFoundException;
 import com.vlad.projectservice.persistance.entity.Project;
+import com.vlad.projectservice.persistance.entity.Role;
 import com.vlad.projectservice.persistance.entity.User;
 import com.vlad.projectservice.persistance.repository.ProjectRepository;
+import com.vlad.projectservice.util.feign.UserClient;
 import com.vlad.projectservice.util.mapper.ProjectMapper;
 import com.vlad.projectservice.web.request.ProjectRequest;
 import com.vlad.projectservice.web.response.ProjectResponse;
@@ -15,9 +17,12 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,6 +32,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectServiceTest {
+  @Mock
+  private UserClient userClient;
   @Mock
   private ProjectRepository projectRepository;
 
@@ -60,7 +67,14 @@ class ProjectServiceTest {
   public void createProject_ShouldCreateProjectTest() {
     Project project = createTestProject();
     ProjectRequest projectRequest = createTestProjectRequest();
+    projectRequest.setTeamIds(List.of(1L, 2L, 3L));
+    User user1 = new User(1L, "test1", "test1@mail.ru", Role.USER, List.of(project));
+    User user2 = new User(2L, "test2", "test2@mail.ru", Role.USER, List.of(project));
+    User user3 = new User(3L, "test3", "test3@mail.ru", Role.USER, List.of(project));
 
+    when(userClient.getUserById(1L)).thenReturn(ResponseEntity.ok(user1));
+    when(userClient.getUserById(2L)).thenReturn(ResponseEntity.ok(user2));
+    when(userClient.getUserById(3L)).thenReturn(ResponseEntity.ok(user3));
     when(projectRepository.save(any(Project.class))).thenReturn(project);
 
     ProjectResponse response = projectService.createProject(projectRequest);
@@ -68,6 +82,7 @@ class ProjectServiceTest {
     assertEquals(project.getId(), response.getId());
     assertEquals(project.getDescription(), response.getDescription());
     assertEquals(project.getName(), response.getName());
+    assertArrayEquals(projectRequest.getTeamIds().toArray(), response.getTeamIds().toArray());
   }
 
   @Test
@@ -86,13 +101,22 @@ class ProjectServiceTest {
     ProjectRequest projectRequest = createTestProjectRequest();
     projectRequest.setName("test name");
 
+    User user1 = new User(1L, "test1", "test1@mail.ru", Role.USER, List.of(project));
+    User user2 = new User(2L, "test2", "test2@mail.ru", Role.USER, List.of(project));
+    User user3 = new User(3L, "test3", "test3@mail.ru", Role.USER, List.of(project));
+
+    when(userClient.getUserById(1L)).thenReturn(ResponseEntity.ok(user1));
+    when(userClient.getUserById(2L)).thenReturn(ResponseEntity.ok(user2));
+    when(userClient.getUserById(3L)).thenReturn(ResponseEntity.ok(user3));
     when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
+    when(userClient.getUserById(any(Long.class))).thenReturn(ResponseEntity.ok(new User()));
 
     ProjectResponse response = projectService.updateProject(project.getId(), projectRequest);
 
     assertEquals(project.getId(), response.getId());
     assertEquals(project.getDescription(), response.getDescription());
     assertEquals(project.getName(), projectRequest.getName());
+    assertArrayEquals(projectRequest.getTeamIds().toArray(), response.getTeamIds().toArray());
   }
 
   @Test

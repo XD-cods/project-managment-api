@@ -49,13 +49,21 @@ public class ProjectService {
 
     Project newProject = projectMapper.mapProjectRequestToProject(projectRequest);
 
-    List<User> users = projectRequest.getTeamIds()
-            .stream()
-            .map(this::getUserById)
-            .toList();
+    if (projectRequest.getTeamIds() != null && !projectRequest.getTeamIds().isEmpty()) {
+      List<User> users = projectRequest.getTeamIds()
+              .stream()
+              .map(this::getUserById)
+              .toList();
 
-    newProject.setTeamMembers(users);
-    newProject.setOwner(getUserById(projectRequest.getOwnerId()));
+
+      newProject.getTeamMembers().clear();
+      newProject.getTeamMembers().addAll(users);
+    }
+
+    if (projectRequest.getOwnerId() != null) {
+      newProject.setOwner(getUserById(projectRequest.getOwnerId()));
+    }
+
     projectRepository.save(newProject);
     return projectMapper.mapProjectToProjectResponse(newProject);
   }
@@ -65,13 +73,24 @@ public class ProjectService {
     Project existProject = projectRepository.findById(id)
             .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, id)));
 
-    List<User> users = projectRequest.getTeamIds()
-            .stream()
-            .map(this::getUserById)
-            .toList();
+    if (projectRequest.getTeamIds() != null) {
+      existProject.getTeamMembers().clear();
+    }
 
-    existProject.setTeamMembers(users);
-    existProject.setOwner(getUserById(projectRequest.getOwnerId()));
+    if (projectRequest.getTeamIds() != null && !projectRequest.getTeamIds().isEmpty()) {
+      List<User> users = projectRequest.getTeamIds()
+              .stream()
+              .map(this::getUserById)
+              .toList();
+      users.stream().map(user -> user.getProjects().add(existProject));
+
+      existProject.getTeamMembers().clear();
+      existProject.getTeamMembers().addAll(users);
+    }
+
+    if (projectRequest.getOwnerId() != null) {
+      existProject.setOwner(getUserById(projectRequest.getOwnerId()));
+    }
 
     projectMapper.updateProjectFromProjectRequest(existProject, projectRequest);
     projectRepository.save(existProject);

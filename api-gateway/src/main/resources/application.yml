@@ -11,7 +11,8 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: lb://user-service
+          uri:
+            lb://user-service
           predicates:
             - Path=/api/user/**
 
@@ -24,6 +25,8 @@ spring:
           uri: lb://task-service
           predicates:
             - Path=/api/task/**
+
+
 
 
 #
@@ -45,3 +48,18 @@ spring:
 #      - url: /api/record/v3/api-docs
 #        name: Library Service
 #        display-name: Library Service
+
+#        - id: user-service
+#          uri: lb://user-service
+#          predicates:
+#            - Path=/api/user/**
+#
+#        - id: project-service
+#          uri: lb://project-service
+#          predicates:
+#            - Path=/api/project/**
+#
+#        - id: task-service
+#          uri: lb://task-service
+#          predicates:
+#            - Path=/api/task/**

@@ -4,8 +4,10 @@ import com.vlad.taskservice.exception.ConflictException;
 import com.vlad.taskservice.exception.NotFoundException;
 import com.vlad.taskservice.persistance.entity.Project;
 import com.vlad.taskservice.persistance.entity.Task;
+import com.vlad.taskservice.persistance.entity.User;
 import com.vlad.taskservice.persistance.repository.TaskRepository;
 import com.vlad.taskservice.service.TaskService;
+import com.vlad.taskservice.utility.feign.UserClient;
 import com.vlad.taskservice.utility.mapper.TaskMapper;
 import com.vlad.taskservice.web.request.TaskRequest;
 import com.vlad.taskservice.web.response.TaskResponse;
@@ -16,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -28,6 +31,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TaskServiceApplicationTests {
+
+  @Mock
+  private UserClient userClient;
 
   @Mock
   private TaskRepository taskRepository;
@@ -63,6 +69,7 @@ class TaskServiceApplicationTests {
     Task task = createTestTask();
     TaskRequest taskRequest = createTestTaskRequest();
 
+    when(userClient.getUserById(any(Long.class))).thenReturn(ResponseEntity.ok(new User()));
     when(taskRepository.save(any(Task.class))).thenReturn(task);
 
     TaskResponse response = taskService.createTask(taskRequest);
@@ -88,6 +95,7 @@ class TaskServiceApplicationTests {
     TaskRequest taskRequest = createTestTaskRequest();
     taskRequest.setTitle("test name");
 
+    when(userClient.getUserById(any(Long.class))).thenReturn(ResponseEntity.ok(new User()));
     when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
     TaskResponse response = taskService.updateTask(task.getId(), taskRequest);
@@ -134,7 +142,7 @@ class TaskServiceApplicationTests {
     return TaskRequest.builder()
             .description("test")
             .title("test")
-            .projectId(1L)
+            .project(1L)
             .build();
   }
 }
