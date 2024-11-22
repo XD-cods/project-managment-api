@@ -1,5 +1,6 @@
 package com.vlad.projectservice.service;
 
+import com.vlad.projectservice.config.ApplicationConfig;
 import com.vlad.projectservice.exception.ConflictException;
 import com.vlad.projectservice.exception.NotFoundException;
 import com.vlad.projectservice.persistance.entity.Project;
@@ -15,9 +16,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,18 +37,34 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(properties = {"spring.cloud.config.enabled=false"})
+@ContextConfiguration(classes = ApplicationConfig.class)
+@ActiveProfiles(profiles = "test")
 class ProjectServiceTest {
+
+  //TODO: Profile load don't work
+  private static final Logger logger = LoggerFactory.getLogger(ProjectServiceTest.class);
+
   @Mock
   private UserClient userClient;
+
   @Mock
   private ProjectRepository projectRepository;
 
+  @Autowired
+  private ModelMapper modelMapper;
+
   @Spy
-  private ProjectMapper projectMapper = new ProjectMapper(new ModelMapper());
+  private ProjectMapper projectMapper = new ProjectMapper(modelMapper);
 
   @InjectMocks
   private ProjectService projectService;
+
+  @Test
+  public void contextLoads() {
+    logger.info("Application context loaded with profile: {}", System.getenv("spring.profiles.active"));
+  }
 
   @Test
   public void getProjectById_ShouldReturnProjectTest() {
