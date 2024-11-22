@@ -23,13 +23,13 @@ public class TaskResponse {
   private String description;
 
   @JsonProperty("project_id")
-  private Long projectId;
+  private Long project;
 
   @JsonProperty("assignee_id")
-  private Long assigneeId;
+  private Long assignee;
 
-  @JsonProperty("project_status")
-  private TaskStatus projectStatus;
+  @JsonProperty("task_status")
+  private TaskStatus taskStatus;
 
   private LocalDateTime deadline;
 }

@@ -2,7 +2,6 @@ package com.vlad.projectservice.web.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vlad.projectservice.persistance.entity.ProjectStatus;
-import com.vlad.projectservice.persistance.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +24,7 @@ public class ProjectResponse {
   private Long ownerId;
 
   @JsonProperty("team_ids")
-  private List<User> teamIds;
+  private List<Long> teamIds;
 
   private ProjectStatus projectStatus;
 }

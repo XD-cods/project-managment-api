@@ -1,26 +1,34 @@
+server:
+  port: 8080
 spring:
   application:
     name: api-gateway
   config:
     import: "configserver:"
 
-#  cloud:
-#    gateway:
-#      routes:
-#        - id: auth-service
-#          uri: lb://auth-service
-#          predicates:
-#            - Path=/api/auth/** , /api/auth/v3/api-docs
-#
-#        - id: book-service
-#          uri: lb://book-service
-#          predicates:
-#            - Path=/api/book/** , /api/book/v3/api-docs
-#
-#        - id: library-service
-#          uri: lb://library-service
-#          predicates:
-#            - Path=/api/record/** , /api/record/v3/api-docs
+
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri:
+            lb://user-service
+          predicates:
+            - Path=/api/user/**
+
+        - id: project-service
+          uri: lb://project-service
+          predicates:
+            - Path=/api/project/**
+
+        - id: task-service
+          uri: lb://task-service
+          predicates:
+            - Path=/api/task/**
+
+
+
+
 #
 #
 #springdoc:
@@ -40,3 +48,18 @@ spring:
 #      - url: /api/record/v3/api-docs
 #        name: Library Service
 #        display-name: Library Service
+
+#        - id: user-service
+#          uri: lb://user-service
+#          predicates:
+#            - Path=/api/user/**
+#
+#        - id: project-service
+#          uri: lb://project-service
+#          predicates:
+#            - Path=/api/project/**
+#
+#        - id: task-service
+#          uri: lb://task-service
+#          predicates:
+#            - Path=/api/task/**

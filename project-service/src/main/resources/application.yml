@@ -1,6 +1,9 @@
 spring:
   application:
-    name: project-name
+    name: project-service
 
   config:
-    import: "configserver:"
+    import: "optional:configserver:"
+
+server:
+  port: 0
