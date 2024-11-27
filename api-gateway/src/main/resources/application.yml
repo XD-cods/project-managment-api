@@ -7,28 +7,6 @@ spring:
     import: "configserver:"
 
 
-  cloud:
-    gateway:
-      routes:
-        - id: user-service
-          uri:
-            lb://user-service
-          predicates:
-            - Path=/api/user/**
-
-        - id: project-service
-          uri: lb://project-service
-          predicates:
-            - Path=/api/project/**
-
-        - id: task-service
-          uri: lb://task-service
-          predicates:
-            - Path=/api/task/**
-
-
-
-
 #
 #
 #springdoc:
