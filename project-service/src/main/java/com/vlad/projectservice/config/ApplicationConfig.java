@@ -1,5 +1,6 @@
 package com.vlad.projectservice.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vlad.projectservice.persistance.entity.Project;
 import com.vlad.projectservice.persistance.entity.User;
 import com.vlad.projectservice.web.response.ProjectResponse;
@@ -40,6 +41,11 @@ public class ApplicationConfig {
   private void mapSpecificFields(Project source, ProjectResponse destination) {
     destination.setTeamIds(source.getTeamMembers().stream().map(User::getId).toList());
     destination.setOwnerId(source.getOwner() != null ? source.getOwner().getId() : null);
+  }
+
+  @Bean
+  public ObjectMapper objectMapper() {
+    return new ObjectMapper();
   }
 
   //  @Bean

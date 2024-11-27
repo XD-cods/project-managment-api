@@ -8,6 +8,7 @@ import com.vlad.taskservice.persistance.entity.User;
 import com.vlad.taskservice.persistance.repository.TaskRepository;
 import com.vlad.taskservice.utility.feign.ProjectClient;
 import com.vlad.taskservice.utility.feign.UserClient;
+import com.vlad.taskservice.utility.kafka.TaskKafkaProducer;
 import com.vlad.taskservice.utility.mapper.TaskMapper;
 import com.vlad.taskservice.web.request.TaskRequest;
 import com.vlad.taskservice.web.response.TaskResponse;
@@ -23,6 +24,7 @@ public class TaskService {
   private final TaskMapper taskMapper;
   private final ProjectClient projectClient;
   private final UserClient userClient;
+  private final TaskKafkaProducer taskKafkaProducer;
 
   public static final String NOT_FOUND_MESSAGE = "Task not found by id: %d";
   public static final String CONFLICT_MESSAGE = "Task already exist by name: %s";
@@ -72,6 +74,7 @@ public class TaskService {
 
     taskMapper.updateTaskFromTaskRequest(existTask, taskRequest);
     taskRepository.save(existTask);
+    taskKafkaProducer.sendTaskUpdatedToKafka(existTask.getTitle());
     return taskMapper.mapTaskToTaskResponse(existTask);
   }
 

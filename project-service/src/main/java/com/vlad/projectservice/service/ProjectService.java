@@ -6,6 +6,7 @@ import com.vlad.projectservice.persistance.entity.Project;
 import com.vlad.projectservice.persistance.entity.User;
 import com.vlad.projectservice.persistance.repository.ProjectRepository;
 import com.vlad.projectservice.util.feign.UserClient;
+import com.vlad.projectservice.util.kafka.ProjectKafkaProducer;
 import com.vlad.projectservice.util.mapper.ProjectMapper;
 import com.vlad.projectservice.web.request.ProjectRequest;
 import com.vlad.projectservice.web.response.ProjectResponse;
@@ -21,6 +22,7 @@ public class ProjectService {
   private final ProjectRepository projectRepository;
   private final ProjectMapper projectMapper;
   private final UserClient userClient;
+  private final ProjectKafkaProducer projectKafkaProducer;
 
   public static final String NOT_FOUND_MESSAGE = "Project not found by id: %d";
   public static final String CONFLICT_MESSAGE = "Project already exist by name: %s";
@@ -94,6 +96,7 @@ public class ProjectService {
 
     projectMapper.updateProjectFromProjectRequest(existProject, projectRequest);
     projectRepository.save(existProject);
+    projectKafkaProducer.sendProjectUpdatedToKafka(existProject.getName());
     return projectMapper.mapProjectToProjectResponse(existProject);
   }
 
